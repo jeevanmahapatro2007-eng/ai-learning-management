@@ -5,3 +5,4 @@ Pillow>=10.0
 # automatically use scikit-learn for TF-IDF course-similarity scoring
 # if it's installed, and falls back to a dependency-free method if not.
 # scikit-learn>=1.3
+gunicorn
