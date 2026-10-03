@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block title %}Result: {{ result.quiz.title }} — Lodestar{% endblock %}
+{% block content %}
+<section class="ls-section-tight">
+  <div class="ls-container" style="max-width: 720px;">
+    <div class="ls-panel ls-text-center ls-mb-40">
+      <span class="ls-eyebrow">{{ result.quiz.title }}</span>
+      <h1 class="ls-mt-16" style="font-size:3rem;">{{ result.percent|floatformat:0 }}%</h1>
+      <p>{{ result.score_points }} / {{ result.total_points }} points</p>
+      {% if result.passed %}
+        <span class="ls-badge-pill teal">Passed</span>
+      {% else %}
+        <span class="ls-badge-pill coral">Below pass mark ({{ result.quiz.pass_mark_percent }}%)</span>
+      {% endif %}
+    </div>
+
+    {% if result.skill_breakdown %}
+      <h3>Skill breakdown</h3>
+      <div class="ls-grid ls-grid-3 ls-mb-40">
+        {% for skill, pct in result.skill_breakdown.items %}
+          <div class="ls-stat">
+            <div class="value">{{ pct|floatformat:0 }}%</div>
+            <div class="label">{{ skill }}</div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <h3>Review your answers</h3>
+    {% for response in responses %}
+      <div class="ls-card ls-mb-16">
+        <div class="ls-flex-between">
+          <h3 style="font-size:.95rem; margin-bottom:0;">{{ forloop.counter }}. {{ response.question.text }}</h3>
+          {% if response.is_correct %}<span class="ls-text-teal">✓ Correct</span>{% else %}<span style="color:var(--ls-error);">✗ Incorrect</span>{% endif %}
+        </div>
+        <p class="ls-text-faint ls-mt-8" style="font-size:.85rem;">
+          Your answer: {{ response.selected_answer.text|default:"No answer" }}
+          {% if not response.is_correct %}
+            <br>Correct answer: {% for a in response.question.answers.all %}{% if a.is_correct %}{{ a.text }}{% endif %}{% endfor %}
+          {% endif %}
+        </p>
+      </div>
+    {% endfor %}
+
+    <a href="{% url 'recommendations:list' %}" class="ls-btn ls-btn-primary">See updated recommendations</a>
+  </div>
+</section>
+{% endblock %}

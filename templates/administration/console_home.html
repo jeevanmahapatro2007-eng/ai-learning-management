@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}Admin console — Lodestar{% endblock %}
+{% block content %}
+<section class="ls-section-tight">
+  <div class="ls-container">
+    <span class="ls-eyebrow">Platform management</span>
+    <h1 class="ls-mt-16 ls-mb-24">Admin console</h1>
+
+    <div class="ls-grid ls-grid-4 ls-mb-40">
+      <div class="ls-stat"><div class="value">{{ overview.total_students }}</div><div class="label">Students</div></div>
+      <div class="ls-stat"><div class="value">{{ overview.total_instructors }}</div><div class="label">Instructors</div></div>
+      <div class="ls-stat"><div class="value">{{ overview.total_courses }}</div><div class="label">Courses</div></div>
+      <div class="ls-stat"><div class="value">{{ overview.total_enrollments }}</div><div class="label">Enrollments</div></div>
+    </div>
+
+    <div class="ls-grid ls-grid-4">
+      <a href="{% url 'administration:manage_students' %}" class="ls-card ls-card-hover"><h3 style="font-size:1rem;">Students</h3><p style="font-size:.85rem;">Manage student accounts</p></a>
+      <a href="{% url 'administration:manage_instructors' %}" class="ls-card ls-card-hover"><h3 style="font-size:1rem;">Instructors</h3><p style="font-size:.85rem;">Approve & manage instructors</p></a>
+      <a href="{% url 'administration:manage_courses' %}" class="ls-card ls-card-hover"><h3 style="font-size:1rem;">Courses</h3><p style="font-size:.85rem;">All courses on the platform</p></a>
+      <a href="{% url 'administration:manage_categories' %}" class="ls-card ls-card-hover"><h3 style="font-size:1rem;">Categories</h3><p style="font-size:.85rem;">Manage learning domains</p></a>
+      <a href="/admin/" class="ls-card ls-card-hover"><h3 style="font-size:1rem;">Django admin</h3><p style="font-size:.85rem;">Full data management</p></a>
+    </div>
+  </div>
+</section>
+{% endblock %}

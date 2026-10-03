@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Manage instructors — Lodestar{% endblock %}
+{% block content %}
+<section class="ls-section-tight">
+  <div class="ls-container">
+    <h1 class="ls-mb-24">Manage instructors</h1>
+    <table class="ls-table">
+      <thead><tr><th>Name</th><th>Username</th><th>Expertise</th><th>Status</th><th>Approval</th><th></th></tr></thead>
+      <tbody>
+        {% for i in instructors %}
+          <tr>
+            <td>{{ i.get_full_name|default:"—" }}</td>
+            <td>{{ i.username }}</td>
+            <td>{{ i.instructor_profile.expertise|default:"—" }}</td>
+            <td>{% if i.is_active %}<span class="ls-badge-pill teal">Active</span>{% else %}<span class="ls-badge-pill coral">Deactivated</span>{% endif %}</td>
+            <td>{% if i.is_instructor_approved %}<span class="ls-badge-pill teal">Approved</span>{% else %}<span class="ls-badge-pill muted">Pending</span>{% endif %}</td>
+            <td class="ls-flex ls-gap-8">
+              {% if not i.is_instructor_approved %}
+                <form action="{% url 'administration:approve_instructor' i.id %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="ls-btn ls-btn-primary ls-btn-sm">Approve</button>
+                </form>
+              {% endif %}
+              <form action="{% url 'administration:toggle_user_active' i.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="ls-btn ls-btn-ghost ls-btn-sm">{% if i.is_active %}Deactivate{% else %}Activate{% endif %}</button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

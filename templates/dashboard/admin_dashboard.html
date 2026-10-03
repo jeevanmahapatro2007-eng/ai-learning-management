@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %}Admin dashboard — Lodestar{% endblock %}
+{% block content %}
+<section class="ls-section-tight">
+  <div class="ls-container">
+    <span class="ls-eyebrow">Platform admin</span>
+    <h1 class="ls-mt-16 ls-mb-24">Platform overview</h1>
+
+    <div class="ls-grid ls-grid-4 ls-mb-24">
+      <div class="ls-stat"><div class="value">{{ overview.total_students }}</div><div class="label">Students</div></div>
+      <div class="ls-stat"><div class="value">{{ overview.total_instructors }}</div><div class="label">Instructors</div></div>
+      <div class="ls-stat"><div class="value">{{ overview.published_courses }}</div><div class="label">Published courses</div></div>
+      <div class="ls-stat"><div class="value">{{ overview.total_enrollments }}</div><div class="label">Enrollments</div></div>
+    </div>
+    <div class="ls-grid ls-grid-4 ls-mb-40">
+      <div class="ls-stat"><div class="value">{{ overview.total_courses }}</div><div class="label">Total courses</div></div>
+      <div class="ls-stat"><div class="value">{{ overview.total_quizzes_taken }}</div><div class="label">Quizzes taken</div></div>
+      <div class="ls-stat"><div class="value">{{ overview.avg_completion_rate }}%</div><div class="label">Avg completion rate</div></div>
+      <div class="ls-stat"><div class="value">{{ overview.pending_instructors }}</div><div class="label">Pending instructors</div></div>
+    </div>
+
+    {% if overview.pending_instructors %}
+      <div class="ls-alert warning">{{ overview.pending_instructors }} instructor account{{ overview.pending_instructors|pluralize }} awaiting approval.
+        <a href="{% url 'administration:manage_instructors' %}" class="ls-text-gold">Review now →</a>
+      </div>
+    {% endif %}
+
+    <div class="ls-grid ls-grid-4 ls-mb-40">
+      <a href="{% url 'administration:console_home' %}" class="ls-card ls-card-hover">
+        <h3 style="font-size:1rem;">Admin console</h3>
+        <p style="font-size:.85rem;">Full management console</p>
+      </a>
+      <a href="{% url 'administration:manage_students' %}" class="ls-card ls-card-hover">
+        <h3 style="font-size:1rem;">Students</h3>
+        <p style="font-size:.85rem;">View & manage students</p>
+      </a>
+      <a href="{% url 'administration:manage_instructors' %}" class="ls-card ls-card-hover">
+        <h3 style="font-size:1rem;">Instructors</h3>
+        <p style="font-size:.85rem;">Approve & manage instructors</p>
+      </a>
+      <a href="{% url 'administration:manage_courses' %}" class="ls-card ls-card-hover">
+        <h3 style="font-size:1rem;">Courses</h3>
+        <p style="font-size:.85rem;">Platform-wide course list</p>
+      </a>
+    </div>
+
+    <h2 style="font-size:1.2rem;" class="ls-mb-16">Top learners</h2>
+    <table class="ls-table">
+      <thead><tr><th>Student</th><th>Points</th><th>Streak</th></tr></thead>
+      <tbody>
+        {% for s in top_students %}
+          <tr><td>{{ s.user.get_full_name|default:s.user.username }}</td><td class="ls-mono">{{ s.points }}</td><td>{{ s.daily_streak }} 🔥</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

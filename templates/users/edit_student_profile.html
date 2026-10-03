@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}Edit profile — Lodestar{% endblock %}
+{% block content %}
+<section class="ls-section">
+  <div class="ls-container" style="max-width: 640px;">
+    <span class="ls-eyebrow">Your profile</span>
+    <h1 class="ls-mt-16 ls-mb-24">Build your learning profile</h1>
+    <p class="ls-mb-24">The more Lodestar knows about your interests and goals, the sharper your recommendations get.</p>
+
+    <div class="ls-panel">
+      <form method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+        {% include 'partials/form_errors.html' %}
+        <div class="ls-grid ls-grid-2">
+          <div class="ls-field"><label>First name</label>{{ form.first_name }}</div>
+          <div class="ls-field"><label>Last name</label>{{ form.last_name }}</div>
+        </div>
+        <div class="ls-field"><label>Phone number</label>{{ form.phone_number }}</div>
+        <div class="ls-field"><label>Profile picture</label>{{ form.profile_picture }}</div>
+        <div class="ls-field"><label>Short bio</label>{{ form.bio }}</div>
+        <div class="ls-field"><label>Education</label>{{ form.education }}</div>
+        <div class="ls-field">
+          <label>Interests</label>{{ form.interests }}
+          <div class="ls-help">Comma-separated, e.g. Python, AI, Web Development</div>
+        </div>
+        <div class="ls-field">
+          <label>Preferred learning domains</label>{{ form.preferred_domains }}
+          <div class="ls-help">Should roughly match a course category, e.g. Python Programming</div>
+        </div>
+        <div class="ls-field"><label>Current level</label>{{ form.current_level }}</div>
+        <div class="ls-field"><label>Learning goals</label>{{ form.learning_goals }}</div>
+        <button type="submit" class="ls-btn ls-btn-primary ls-btn-block">Save profile</button>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

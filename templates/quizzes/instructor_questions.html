@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}Questions — {{ quiz.title }}{% endblock %}
+{% block content %}
+<section class="ls-section-tight">
+  <div class="ls-container">
+    <span class="ls-eyebrow">{{ quiz.title }}</span>
+    <h1 class="ls-mt-16 ls-mb-24">Manage questions</h1>
+
+    <div class="ls-hero-grid" style="align-items:start; grid-template-columns: 1fr 1.3fr;">
+      <div class="ls-panel">
+        <h3 style="font-size:1rem;">Add a question</h3>
+        <form method="post" novalidate>
+          {% csrf_token %}
+          {% include 'partials/form_errors.html' %}
+          <div class="ls-field"><label>Question text</label>{{ form.text }}</div>
+          <div class="ls-field"><label>Skill tested</label>{{ form.skill }}</div>
+          <div class="ls-grid ls-grid-2">
+            <div class="ls-field"><label>Points</label>{{ form.points }}</div>
+            <div class="ls-field"><label>Order</label>{{ form.order }}</div>
+          </div>
+          <button type="submit" class="ls-btn ls-btn-primary ls-btn-block">Add question</button>
+        </form>
+        <p class="ls-help ls-mt-16">After saving, open the question to add its answer options.</p>
+      </div>
+
+      <div>
+        {% for question in questions %}
+          <div class="ls-card ls-mb-16">
+            <div class="ls-flex-between">
+              <h3 style="font-size:.95rem;">{{ forloop.counter }}. {{ question.text }}</h3>
+              <a href="{% url 'quizzes:instructor_answers' quiz.id question.id %}" class="ls-btn ls-btn-ghost ls-btn-sm">Edit answers</a>
+            </div>
+            <span class="ls-badge-pill muted">{{ question.answers.count }} option{{ question.answers.count|pluralize }}</span>
+            {% if question.skill %}<span class="ls-badge-pill teal">{{ question.skill.name }}</span>{% endif %}
+          </div>
+        {% empty %}
+          <div class="ls-empty"><div class="glyph">✦</div><p>No questions yet.</p></div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

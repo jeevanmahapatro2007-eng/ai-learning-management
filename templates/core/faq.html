@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}FAQ — Lodestar{% endblock %}
+{% block content %}
+<section class="ls-section">
+  <div class="ls-container" style="max-width: 720px;">
+    <span class="ls-eyebrow">FAQ</span>
+    <h1 class="ls-mt-16 ls-mb-24">Frequently asked questions</h1>
+
+    {% if faqs %}
+      <div class="ls-flex" style="flex-direction:column; gap:14px;">
+        {% for item in faqs %}
+          <div class="ls-card">
+            <h3 style="font-size:1rem;">{{ item.question }}</h3>
+            <p style="margin-bottom:0;">{{ item.answer }}</p>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="ls-empty">
+        <div class="glyph">✦</div>
+        <p>No questions have been added yet.</p>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

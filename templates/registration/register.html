@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block title %}Create your account — Lodestar{% endblock %}
+{% block content %}
+<section class="ls-section">
+  <div class="ls-container" style="max-width: 560px;">
+    <span class="ls-eyebrow">Get started</span>
+    <h1 class="ls-mt-16 ls-mb-24">Create your account</h1>
+
+    <div class="ls-panel">
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {% if form.non_field_errors %}<div class="ls-alert error">{{ form.non_field_errors.0 }}</div>{% endif %}
+
+        <div class="ls-field">
+          <label>I am joining as a...</label>
+          <div class="ls-radio-group">
+            {% for radio in form.role %}
+              <label class="ls-radio-option">
+                {{ radio.tag }} {{ radio.choice_label }}
+              </label>
+            {% endfor %}
+          </div>
+          {% if form.role.errors %}<div class="ls-error-text">{{ form.role.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="ls-grid ls-grid-2">
+          <div class="ls-field">
+            <label for="{{ form.first_name.id_for_label }}">First name</label>
+            {{ form.first_name }}
+            {% if form.first_name.errors %}<div class="ls-error-text">{{ form.first_name.errors.0 }}</div>{% endif %}
+          </div>
+          <div class="ls-field">
+            <label for="{{ form.last_name.id_for_label }}">Last name</label>
+            {{ form.last_name }}
+            {% if form.last_name.errors %}<div class="ls-error-text">{{ form.last_name.errors.0 }}</div>{% endif %}
+          </div>
+        </div>
+
+        <div class="ls-field">
+          <label for="{{ form.username.id_for_label }}">Username</label>
+          {{ form.username }}
+          {% if form.username.errors %}<div class="ls-error-text">{{ form.username.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="ls-field">
+          <label for="{{ form.email.id_for_label }}">Email</label>
+          {{ form.email }}
+          {% if form.email.errors %}<div class="ls-error-text">{{ form.email.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="ls-grid ls-grid-2">
+          <div class="ls-field">
+            <label for="{{ form.password1.id_for_label }}">Password</label>
+            {{ form.password1 }}
+            {% if form.password1.errors %}<div class="ls-error-text">{{ form.password1.errors.0 }}</div>{% endif %}
+          </div>
+          <div class="ls-field">
+            <label for="{{ form.password2.id_for_label }}">Confirm password</label>
+            {{ form.password2 }}
+            {% if form.password2.errors %}<div class="ls-error-text">{{ form.password2.errors.0 }}</div>{% endif %}
+          </div>
+        </div>
+
+        <button type="submit" class="ls-btn ls-btn-primary ls-btn-block ls-mt-16">Create account</button>
+      </form>
+    </div>
+
+    <p class="ls-text-center ls-mt-24">Already have an account? <a href="{% url 'users:login' %}" class="ls-text-gold">Log in</a></p>
+  </div>
+</section>
+{% endblock %}

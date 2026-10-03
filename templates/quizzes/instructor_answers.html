@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Answers — {{ question.text|truncatechars:40 }}{% endblock %}
+{% block content %}
+<section class="ls-section-tight">
+  <div class="ls-container" style="max-width: 620px;">
+    <span class="ls-eyebrow">{{ quiz.title }}</span>
+    <h1 class="ls-mt-16 ls-mb-24">{{ question.text }}</h1>
+
+    <div class="ls-panel">
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {{ formset.management_form }}
+        {% for error in formset.non_form_errors %}<div class="ls-alert error">{{ error }}</div>{% endfor %}
+        {% for f in formset %}{% for field in f %}{% for error in field.errors %}<div class="ls-alert error">{{ error }}</div>{% endfor %}{% endfor %}{% endfor %}
+        {% for f in formset %}
+          <div class="ls-flex ls-gap-12 ls-mb-16" style="align-items:center;">
+            {{ f.id }}
+            <div style="flex:1;">{{ f.text }}</div>
+            <label class="ls-flex ls-gap-8" style="align-items:center; font-size:.85rem;">{{ f.is_correct }} Correct</label>
+            {% if f.instance.pk %}<label class="ls-text-faint" style="font-size:.8rem;">{{ f.DELETE }} Delete</label>{% endif %}
+          </div>
+        {% endfor %}
+        <button type="submit" class="ls-btn ls-btn-primary ls-btn-block">Save answers</button>
+      </form>
+    </div>
+    <a href="{% url 'quizzes:instructor_questions' quiz.id %}" class="ls-btn ls-btn-ghost ls-mt-24">← Back to questions</a>
+  </div>
+</section>
+{% endblock %}

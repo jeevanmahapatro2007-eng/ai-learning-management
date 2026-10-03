@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Lodestar — Personalized Learning{% endblock %}</title>
+  <meta name="description" content="Lodestar plots a personalized learning path for every student, powered by skill assessments and an explainable recommendation engine.">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+  <nav class="ls-nav">
+    <div class="ls-nav-inner">
+      <a href="{% url 'core:home' %}" class="ls-brand">
+        <span class="ls-brand-mark">✦</span> Lodestar
+      </a>
+      <ul class="ls-nav-links" id="ls-nav-links">
+        <li><a href="{% url 'core:home' %}">Home</a></li>
+        <li><a href="{% url 'courses:list' %}">Courses</a></li>
+        {% if user.is_authenticated and user.is_student %}
+          <li><a href="{% url 'recommendations:list' %}">For you</a></li>
+          <li><a href="{% url 'quizzes:list' %}">Quizzes</a></li>
+          <li><a href="{% url 'gamification:badges' %}">Badges</a></li>
+        {% elif user.is_authenticated and user.is_instructor %}
+          <li><a href="{% url 'courses:instructor_courses' %}">My courses</a></li>
+          <li><a href="{% url 'quizzes:instructor_quizzes' %}">My quizzes</a></li>
+        {% endif %}
+        <li><a href="{% url 'core:about' %}">About</a></li>
+        <li><a href="{% url 'gamification:leaderboard' %}">Leaderboard</a></li>
+        <li><a href="{% url 'core:faq' %}">FAQ</a></li>
+        <li><a href="{% url 'core:contact' %}">Contact</a></li>
+      </ul>
+      <button type="button" class="ls-nav-toggle" aria-label="Menu" onclick="document.getElementById('ls-nav-links').classList.toggle('open')">☰</button>
+      <div class="ls-nav-actions">
+        {% if user.is_authenticated %}
+          <a href="{% url 'notifications:list' %}" class="ls-btn ls-btn-ghost ls-btn-sm" title="Notifications">
+            🔔{% if unread_notification_count %} <span class="ls-text-gold">{{ unread_notification_count }}</span>{% endif %}
+          </a>
+          <a href="{% url 'dashboard:redirect' %}" class="ls-btn ls-btn-ghost ls-btn-sm">Dashboard</a>
+          <form action="{% url 'users:logout' %}" method="post" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="ls-btn ls-btn-primary ls-btn-sm">Log out</button>
+          </form>
+        {% else %}
+          <a href="{% url 'users:login' %}" class="ls-btn ls-btn-ghost ls-btn-sm">Log in</a>
+          <a href="{% url 'users:register' %}" class="ls-btn ls-btn-primary ls-btn-sm">Get started</a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <div class="ls-container ls-mt-24">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="ls-alert {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    </div>
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="ls-footer">
+    <div class="ls-container">
+      <div class="ls-footer-grid">
+        <div>
+          <div class="ls-brand ls-mb-16"><span class="ls-brand-mark">✦</span> Lodestar</div>
+          <p class="ls-text-dim" style="max-width: 34ch;">A personalized, AI-assisted learning management platform. Every path is plotted from your own skills, not a fixed syllabus.</p>
+        </div>
+        <div>
+          <h4>Platform</h4>
+          <ul>
+            <li><a href="{% url 'courses:list' %}">Browse courses</a></li>
+            <li><a href="{% url 'gamification:leaderboard' %}">Leaderboard</a></li>
+            <li><a href="{% url 'core:about' %}">About</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Support</h4>
+          <ul>
+            <li><a href="{% url 'core:faq' %}">FAQ</a></li>
+            <li><a href="{% url 'core:contact' %}">Contact us</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Account</h4>
+          <ul>
+            {% if user.is_authenticated %}
+              <li><a href="{% url 'dashboard:redirect' %}">Dashboard</a></li>
+              <li><a href="{% url 'users:profile' %}">Profile</a></li>
+            {% else %}
+              <li><a href="{% url 'users:login' %}">Log in</a></li>
+              <li><a href="{% url 'users:register' %}">Register</a></li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+      <div class="ls-footer-bottom">
+        <span>© {% now "Y" %} Lodestar. Academic project build.</span>
+        <span class="ls-mono">Plot your course.</span>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

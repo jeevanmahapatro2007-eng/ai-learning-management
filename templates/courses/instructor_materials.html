@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}Materials — {{ lesson.title }}{% endblock %}
+{% block content %}
+<section class="ls-section-tight">
+  <div class="ls-container">
+    <span class="ls-eyebrow">{{ course.title }} / {{ lesson.title }}</span>
+    <h1 class="ls-mt-16 ls-mb-24">Manage materials</h1>
+
+    <div class="ls-hero-grid" style="align-items:start; grid-template-columns: 1fr 1.3fr;">
+      <div class="ls-panel">
+        <h3 style="font-size:1rem;">Add material</h3>
+        <form method="post" enctype="multipart/form-data" novalidate>
+          {% csrf_token %}
+          {% include 'partials/form_errors.html' %}
+          <div class="ls-field"><label>Title</label>{{ form.title }}</div>
+          <div class="ls-field"><label>Type</label>{{ form.material_type }}</div>
+          <div class="ls-field"><label>File</label>{{ form.file }}</div>
+          <div class="ls-field"><label>External URL</label>{{ form.external_url }}</div>
+          <div class="ls-field"><label>Description</label>{{ form.description }}</div>
+          <button type="submit" class="ls-btn ls-btn-primary ls-btn-block">Add material</button>
+        </form>
+      </div>
+      <div>
+        {% for m in materials %}
+          <div class="ls-card ls-mb-16">
+            <div class="ls-flex-between">
+              <span>{{ m.title }}</span>
+              <span class="ls-badge-pill muted">{{ m.get_material_type_display }}</span>
+            </div>
+          </div>
+        {% empty %}
+          <div class="ls-empty"><div class="glyph">✦</div><p>No materials yet.</p></div>
+        {% endfor %}
+      </div>
+    </div>
+    <a href="{% url 'courses:instructor_lessons' course.slug %}" class="ls-btn ls-btn-ghost ls-mt-24">← Back to lessons</a>
+  </div>
+</section>
+{% endblock %}

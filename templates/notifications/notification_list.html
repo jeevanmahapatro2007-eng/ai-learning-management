@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Notifications — Lodestar{% endblock %}
+{% block content %}
+<section class="ls-section-tight">
+  <div class="ls-container" style="max-width: 640px;">
+    <div class="ls-flex-between ls-mb-24">
+      <h1>Notifications</h1>
+      <a href="{% url 'notifications:mark_all_read' %}" class="ls-btn ls-btn-ghost ls-btn-sm">Mark all read</a>
+    </div>
+
+    {% if notifications %}
+      <div class="ls-flex" style="flex-direction:column; gap:10px;">
+        {% for n in notifications %}
+          <a href="{% url 'notifications:mark_read' n.id %}" class="ls-card" style="{% if not n.is_read %}border-color: var(--ls-gold-dim);{% endif %} display:block;">
+            <div class="ls-flex-between">
+              <span class="ls-badge-pill {% if not n.is_read %}teal{% else %}muted{% endif %}">{{ n.get_category_display }}</span>
+              <span class="ls-text-faint" style="font-size:.78rem;">{{ n.created_at|timesince }} ago</span>
+            </div>
+            <h3 style="font-size:.95rem;" class="ls-mt-8">{{ n.title }}</h3>
+            <p style="font-size:.85rem; margin-bottom:0;">{{ n.message }}</p>
+          </a>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="ls-empty"><div class="glyph">✦</div><p>No notifications yet.</p></div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}My profile — Lodestar{% endblock %}
+{% block content %}
+<section class="ls-section">
+  <div class="ls-container" style="max-width: 640px;">
+    <div class="ls-flex-between ls-mb-24">
+      <h1>My profile</h1>
+      <a href="{% url 'users:edit_profile' %}" class="ls-btn ls-btn-ghost ls-btn-sm">Edit</a>
+    </div>
+    <div class="ls-panel">
+      <div class="ls-flex ls-gap-16 ls-mb-24">
+        <div class="ls-avatar" style="width:64px;height:64px;font-size:1.4rem;">
+          {% if profile.profile_picture %}<img src="{{ profile.profile_picture.url }}" alt="">{% else %}{{ profile.user.first_name|first|default:profile.user.username|first|upper }}{% endif %}
+        </div>
+        <div>
+          <h3 style="margin-bottom:2px;">{{ profile.user.get_full_name|default:profile.user.username }}</h3>
+          {% if profile.user.is_instructor_approved %}
+            <span class="ls-badge-pill teal">Approved instructor</span>
+          {% else %}
+            <span class="ls-badge-pill muted">Pending approval</span>
+          {% endif %}
+        </div>
+      </div>
+      <p class="ls-text-dim">{{ profile.bio|default:"No bio yet." }}</p>
+      <hr class="ls-divider">
+      <div class="ls-grid ls-grid-2">
+        <div><span class="ls-text-faint" style="font-size:.8rem;">Expertise</span><p>{{ profile.expertise|default:"—" }}</p></div>
+        <div><span class="ls-text-faint" style="font-size:.8rem;">Experience</span><p>{{ profile.years_of_experience }} years</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

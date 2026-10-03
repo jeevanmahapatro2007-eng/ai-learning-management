@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title %}Badges — Lodestar{% endblock %}
+{% block content %}
+<section class="ls-section-tight">
+  <div class="ls-container">
+    <span class="ls-eyebrow">Achievements</span>
+    <h1 class="ls-mt-16 ls-mb-24">My badges</h1>
+
+    <div class="ls-grid ls-grid-4 ls-mb-40">
+      {% for badge in all_badges %}
+        <div class="ls-card ls-text-center" style="{% if badge.id not in earned_ids %}opacity:0.4;{% endif %}">
+          <div style="font-size:2rem;" class="ls-mb-8">{% if badge.id in earned_ids %}🏅{% else %}🔒{% endif %}</div>
+          <h3 style="font-size:.92rem;">{{ badge.name }}</h3>
+          <p style="font-size:.8rem;">{{ badge.description }}</p>
+        </div>
+      {% endfor %}
+    </div>
+
+    <h2 style="font-size:1.1rem;" class="ls-mb-16">Recent achievements</h2>
+    <div class="ls-flex" style="flex-direction:column; gap:8px;">
+      {% for a in achievements %}
+        <div class="ls-card" style="padding:14px 18px;">
+          <div class="ls-flex-between">
+            <span style="font-size:.88rem;">{{ a.description }}</span>
+            <span class="ls-mono ls-text-gold">+{{ a.points }} pts</span>
+          </div>
+        </div>
+      {% empty %}
+        <p class="ls-text-faint">No achievements logged yet.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

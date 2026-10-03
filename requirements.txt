@@ -1,0 +1,7 @@
+Django>=5.0,<5.3
+Pillow>=10.0
+
+# Optional, only used if present: apps/recommendations/engine.py will
+# automatically use scikit-learn for TF-IDF course-similarity scoring
+# if it's installed, and falls back to a dependency-free method if not.
+# scikit-learn>=1.3

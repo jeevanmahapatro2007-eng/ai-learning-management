@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard — Lodestar{% endblock %}
+{% block content %}
+<section class="ls-section-tight">
+  <div class="ls-container">
+    <span class="ls-eyebrow">Your dashboard</span>
+    <h1 class="ls-mt-16 ls-mb-24">Welcome back, {{ user.first_name|default:user.username }}</h1>
+
+    <div class="ls-grid ls-grid-4 ls-mb-40">
+      <div class="ls-stat"><div class="value">{{ overview.courses_enrolled }}</div><div class="label">Courses enrolled</div></div>
+      <div class="ls-stat"><div class="value">{{ overview.courses_completed }}</div><div class="label">Courses completed</div></div>
+      <div class="ls-stat"><div class="value">{{ overview.quiz_average }}%</div><div class="label">Quiz average</div></div>
+      <div class="ls-stat"><div class="value">{{ overview.current_streak }}🔥</div><div class="label">Day streak</div></div>
+    </div>
+
+    <div class="ls-hero-grid" style="align-items:start; grid-template-columns: 1.3fr 0.9fr;">
+      <div>
+        <div class="ls-flex-between ls-mb-16">
+          <h2 style="font-size:1.2rem;">Recommended for you</h2>
+          <a href="{% url 'recommendations:list' %}" class="ls-btn ls-btn-ghost ls-btn-sm">See all</a>
+        </div>
+        {% if recommendations %}
+          <div class="ls-grid ls-grid-2 ls-mb-40">
+            {% for rec in recommendations %}
+              <a href="{% url 'courses:detail' rec.course.slug %}?via=recommendation" class="ls-card ls-card-hover">
+                <span class="ls-badge-pill">{{ rec.get_reason_display }}</span>
+                <h3 style="font-size:1rem;" class="ls-mt-8">{{ rec.course.title }}</h3>
+                <p style="font-size:.85rem;">{{ rec.explanation }}</p>
+              </a>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="ls-empty ls-mb-40"><div class="glyph">✦</div><p>Take a skill assessment to unlock recommendations.</p><a href="{% url 'quizzes:list' %}" class="ls-btn ls-btn-primary ls-btn-sm ls-mt-16">Take an assessment</a></div>
+        {% endif %}
+
+        <h2 style="font-size:1.2rem;" class="ls-mb-16">Continue learning</h2>
+        {% if recent_enrollments %}
+          <div class="ls-flex" style="flex-direction:column; gap:10px;">
+            {% for e in recent_enrollments %}
+              <a href="{% url 'courses:learn' e.course.slug %}" class="ls-card ls-card-hover ls-flex-between" style="padding:16px 20px;">
+                <div>
+                  <h3 style="font-size:.95rem; margin-bottom:4px;">{{ e.course.title }}</h3>
+                  <div class="ls-progress-track" style="width:200px;"><div class="ls-progress-fill" style="width:{{ e.progress_percent }}%;"></div></div>
+                </div>
+                <span class="ls-mono ls-text-teal">{{ e.progress_percent }}%</span>
+              </a>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="ls-empty"><div class="glyph">✦</div><p>You haven't enrolled in any courses yet.</p><a href="{% url 'courses:list' %}" class="ls-btn ls-btn-primary ls-btn-sm ls-mt-16">Browse courses</a></div>
+        {% endif %}
+      </div>
+
+      <div>
+        <div class="ls-panel ls-mb-24">
+          <h3 style="font-size:1rem;">AI insights</h3>
+          <div class="ls-flex" style="flex-direction:column; gap:10px; margin-top:16px;">
+            {% for insight in insights %}
+              <div class="ls-mono" style="font-size:.82rem; color: var(--ls-text-dim); padding:10px 0; border-bottom:1px solid var(--ls-line);">→ {{ insight }}</div>
+            {% endfor %}
+          </div>
+        </div>
+
+        {% if overview.weak_skills or overview.strong_skills %}
+        <div class="ls-panel ls-mb-24">
+          <h3 style="font-size:1rem;">Skill snapshot</h3>
+          {% for s in overview.strong_skills %}
+            <div class="ls-flex-between ls-mt-8"><span style="font-size:.85rem;">{{ s.skill.name }}</span><span class="ls-badge-pill teal">{{ s.proficiency_percent|floatformat:0 }}%</span></div>
+          {% endfor %}
+          {% for s in overview.weak_skills %}
+            <div class="ls-flex-between ls-mt-8"><span style="font-size:.85rem;">{{ s.skill.name }}</span><span class="ls-badge-pill coral">{{ s.proficiency_percent|floatformat:0 }}%</span></div>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="ls-panel">
+          <div class="ls-flex-between">
+            <h3 style="font-size:1rem;">Notifications</h3>
+            <a href="{% url 'notifications:list' %}" class="ls-text-gold" style="font-size:.8rem;">View all</a>
+          </div>
+          {% for n in notifications %}
+            <div style="font-size:.82rem; padding:10px 0; border-bottom:1px solid var(--ls-line);">
+              <strong>{{ n.title }}</strong><br><span class="ls-text-faint">{{ n.message }}</span>
+            </div>
+          {% empty %}
+            <p class="ls-text-faint" style="font-size:.85rem;">You're all caught up.</p>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

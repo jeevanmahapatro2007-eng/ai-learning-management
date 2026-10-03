@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}Quizzes — Lodestar{% endblock %}
+{% block content %}
+<section class="ls-section-tight">
+  <div class="ls-container">
+    <span class="ls-eyebrow">Assessments & Quizzes</span>
+    <h1 class="ls-mt-16 ls-mb-24">Quizzes</h1>
+
+    <h2 style="font-size:1.2rem;">Skill assessments</h2>
+    <p class="ls-text-faint" style="font-size:.9rem;">Take these first — they calibrate your recommendations.</p>
+    <div class="ls-grid ls-grid-3 ls-mb-40">
+      {% for quiz in assessments %}
+        <div class="ls-card">
+          <span class="ls-badge-pill">{{ quiz.qcount }} question{{ quiz.qcount|pluralize }}</span>
+          <h3 style="font-size:1.05rem;" class="ls-mt-16">{{ quiz.title }}</h3>
+          <p style="font-size:.88rem;">{{ quiz.description }}</p>
+          <a href="{% url 'quizzes:take' quiz.id %}" class="ls-btn ls-btn-primary ls-btn-sm">Start assessment</a>
+        </div>
+      {% empty %}
+        <p class="ls-text-faint">No assessments available yet.</p>
+      {% endfor %}
+    </div>
+
+    <h2 style="font-size:1.2rem;">Course & lesson quizzes</h2>
+    <div class="ls-grid ls-grid-3">
+      {% for quiz in course_quizzes %}
+        <div class="ls-card">
+          <span class="ls-badge-pill muted">{{ quiz.qcount }} question{{ quiz.qcount|pluralize }}</span>
+          <h3 style="font-size:1.05rem;" class="ls-mt-16">{{ quiz.title }}</h3>
+          {% if quiz.course %}<p class="ls-text-faint" style="font-size:.85rem;">{{ quiz.course.title }}</p>{% endif %}
+          <a href="{% url 'quizzes:take' quiz.id %}" class="ls-btn ls-btn-ghost ls-btn-sm">Take quiz</a>
+        </div>
+      {% empty %}
+        <p class="ls-text-faint">No course quizzes yet.</p>
+      {% endfor %}
+    </div>
+
+    <a href="{% url 'quizzes:history' %}" class="ls-btn ls-btn-ghost ls-mt-40">View my quiz history</a>
+  </div>
+</section>
+{% endblock %}

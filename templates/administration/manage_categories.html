@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Manage categories — Lodestar{% endblock %}
+{% block content %}
+<section class="ls-section-tight">
+  <div class="ls-container" style="max-width: 560px;">
+    <h1 class="ls-mb-24">Manage categories</h1>
+
+    <div class="ls-panel ls-mb-24">
+      <form method="post" class="ls-flex ls-gap-12">
+        {% csrf_token %}
+        <input type="text" name="name" class="ls-input" placeholder="New category name" required>
+        <button type="submit" class="ls-btn ls-btn-primary">Add</button>
+      </form>
+    </div>
+
+    <div class="ls-flex" style="flex-direction:column; gap:8px;">
+      {% for cat in categories %}
+        <div class="ls-card ls-flex-between" style="padding:14px 18px;">
+          <span>{{ cat.name }}</span>
+          <span class="ls-text-faint ls-mono" style="font-size:.8rem;">{{ cat.courses.count }} course{{ cat.courses.count|pluralize }}</span>
+        </div>
+      {% empty %}
+        <p class="ls-text-faint">No categories yet.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}Lessons — {{ course.title }}{% endblock %}
+{% block content %}
+<section class="ls-section-tight">
+  <div class="ls-container">
+    <span class="ls-eyebrow">{{ course.title }}</span>
+    <h1 class="ls-mt-16 ls-mb-24">Manage lessons</h1>
+
+    <div class="ls-hero-grid" style="align-items:start; grid-template-columns: 1fr 1.3fr;">
+      <div class="ls-panel">
+        <h3 style="font-size:1rem;">Add a lesson</h3>
+        <form method="post" novalidate>
+          {% csrf_token %}
+          {% include 'partials/form_errors.html' %}
+          <div class="ls-field"><label>Title</label>{{ form.title }}</div>
+          <div class="ls-field"><label>Type</label>{{ form.lesson_type }}</div>
+          <div class="ls-field"><label>Content</label>{{ form.content }}</div>
+          <div class="ls-field"><label>Video URL (optional)</label>{{ form.video_url }}</div>
+          <div class="ls-grid ls-grid-2">
+            <div class="ls-field"><label>Order</label>{{ form.order }}</div>
+            <div class="ls-field"><label>Est. minutes</label>{{ form.estimated_minutes }}</div>
+          </div>
+          <div class="ls-field"><label>Skills</label>{{ form.skills }}</div>
+          <button type="submit" class="ls-btn ls-btn-primary ls-btn-block">Add lesson</button>
+        </form>
+      </div>
+
+      <div>
+        {% for lesson in lessons %}
+          <div class="ls-card ls-mb-16">
+            <div class="ls-flex-between">
+              <h3 style="font-size:1rem;">{{ forloop.counter }}. {{ lesson.title }}</h3>
+              <a href="{% url 'courses:instructor_materials' course.slug lesson.id %}" class="ls-btn ls-btn-ghost ls-btn-sm">Materials</a>
+            </div>
+            <span class="ls-badge-pill">{{ lesson.get_lesson_type_display }}</span>
+            <span class="ls-badge-pill muted">{{ lesson.estimated_minutes }}m</span>
+          </div>
+        {% empty %}
+          <div class="ls-empty"><div class="glyph">✦</div><p>No lessons yet — add your first one.</p></div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

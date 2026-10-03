@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% block title %}Learning: {{ course.title }} — Lodestar{% endblock %}
+{% block content %}
+<section class="ls-section-tight">
+  <div class="ls-container">
+    <div class="ls-flex-between ls-mb-16">
+      <div>
+        <span class="ls-eyebrow">{{ course.title }}</span>
+        <h1 class="ls-mt-8" style="font-size:1.6rem;">{{ current_lesson.title|default:"Course overview" }}</h1>
+      </div>
+      <a href="{% url 'courses:detail' course.slug %}" class="ls-btn ls-btn-ghost ls-btn-sm">Course details</a>
+    </div>
+
+    <div class="ls-progress-track ls-mb-40">
+      <div class="ls-progress-fill" style="width: {{ enrollment.progress_percent }}%;"></div>
+    </div>
+
+    <div class="ls-hero-grid" style="align-items:start; grid-template-columns: 0.8fr 1.4fr;">
+      <div>
+        <div class="ls-panel" style="padding:16px;">
+          <span class="ls-text-faint ls-mono" style="font-size:.75rem;">LESSONS</span>
+          <div class="ls-flex ls-mt-16" style="flex-direction:column; gap:4px;">
+            {% for lesson in lessons %}
+              <a href="?lesson={{ lesson.id }}" class="ls-flex-between" style="padding:10px 12px; border-radius:8px; {% if current_lesson.id == lesson.id %}background: var(--ls-navy-700);{% endif %}">
+                <span style="font-size:.9rem;">{{ forloop.counter }}. {{ lesson.title }}</span>
+                {% if lesson.id in completed_ids %}<span class="ls-text-teal">✓</span>{% endif %}
+              </a>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <div>
+        {% if current_lesson %}
+          <div class="ls-panel">
+            <span class="ls-badge-pill">{{ current_lesson.get_lesson_type_display }}</span>
+            <h2 class="ls-mt-16">{{ current_lesson.title }}</h2>
+
+            {% if current_lesson.video_url %}
+              <p class="ls-text-faint">Video: <a href="{{ current_lesson.video_url }}" class="ls-text-gold" target="_blank">{{ current_lesson.video_url }}</a></p>
+            {% endif %}
+
+            <p>{{ current_lesson.content|linebreaksbr }}</p>
+
+            {% if current_lesson.materials.all %}
+              <h3 class="ls-mt-24" style="font-size:1rem;">Materials</h3>
+              <div class="ls-flex" style="flex-direction:column; gap:8px;">
+                {% for m in current_lesson.materials.all %}
+                  <div class="ls-card" style="padding:12px 16px;">
+                    <div class="ls-flex-between">
+                      <span>{{ m.title }}</span>
+                      <span class="ls-badge-pill muted">{{ m.get_material_type_display }}</span>
+                    </div>
+                    {% if m.description %}<p class="ls-text-faint" style="font-size:.85rem; margin:8px 0 0;">{{ m.description }}</p>{% endif %}
+                    <div class="ls-flex ls-gap-16 ls-mt-8">
+                      {% if m.file %}<a href="{{ m.file.url }}" class="ls-text-gold" style="font-size:.85rem;" target="_blank" rel="noopener">Download file →</a>{% endif %}
+                      {% if m.external_url %}<a href="{{ m.external_url }}" class="ls-text-gold" style="font-size:.85rem;" target="_blank" rel="noopener">Open link →</a>{% endif %}
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            {% endif %}
+
+            <form action="{% url 'courses:complete_lesson' course.slug current_lesson.id %}" method="post" class="ls-mt-24">
+              {% csrf_token %}
+              <button type="submit" class="ls-btn ls-btn-teal">Mark lesson complete</button>
+            </form>
+          </div>
+
+          {% if course.quizzes.all %}
+            <div class="ls-panel ls-mt-24">
+              <h3 style="font-size:1rem;">Course quizzes</h3>
+              {% for quiz in course.quizzes.all %}
+                <div class="ls-flex-between ls-mt-8">
+                  <span>{{ quiz.title }}</span>
+                  <a href="{% url 'quizzes:take' quiz.id %}" class="ls-btn ls-btn-ghost ls-btn-sm">Take quiz</a>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% else %}
+          <div class="ls-empty"><div class="glyph">✦</div><p>No lessons yet.</p></div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

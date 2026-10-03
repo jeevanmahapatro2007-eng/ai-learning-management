@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}Log in — Lodestar{% endblock %}
+{% block content %}
+<section class="ls-section">
+  <div class="ls-container" style="max-width: 440px;">
+    <span class="ls-eyebrow">Welcome back</span>
+    <h1 class="ls-mt-16 ls-mb-24">Log in</h1>
+
+    <div class="ls-panel">
+      <form method="post" novalidate>
+        {% csrf_token %}
+        <div class="ls-field">
+          <label for="id_username">Username</label>
+          <input type="text" name="username" id="id_username" class="ls-input" autofocus required>
+        </div>
+        <div class="ls-field">
+          <label for="id_password">Password</label>
+          <input type="password" name="password" id="id_password" class="ls-input" required>
+        </div>
+        {% if form.errors %}
+          <div class="ls-error-text ls-mb-16">Please check your username and password and try again.</div>
+        {% endif %}
+        <button type="submit" class="ls-btn ls-btn-primary ls-btn-block">Log in</button>
+      </form>
+    </div>
+
+    <div class="ls-flex-between ls-mt-24">
+      <a href="{% url 'users:password_reset' %}" class="ls-text-dim" style="font-size:0.88rem;">Forgot password?</a>
+      <a href="{% url 'users:register' %}" class="ls-text-gold" style="font-size:0.88rem;">Create an account</a>
+    </div>
+
+    <div class="ls-card ls-mt-40" style="font-size:0.82rem;">
+      <strong class="ls-text-faint">Demo accounts</strong>
+      <div class="ls-mono ls-text-dim ls-mt-8">admin / admin123<br>instructor / instructor123<br>student / student123</div>
+    </div>
+  </div>
+</section>
+{% endblock %}

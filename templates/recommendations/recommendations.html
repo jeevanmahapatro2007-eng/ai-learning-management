@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Recommendations — Lodestar{% endblock %}
+{% block content %}
+<section class="ls-section-tight">
+  <div class="ls-container">
+    <span class="ls-eyebrow">Personalized for you</span>
+    <h1 class="ls-mt-16 ls-mb-24">Your recommendations</h1>
+
+    {% if recommendations %}
+      <div class="ls-grid ls-grid-3">
+        {% for rec in recommendations %}
+          <div class="ls-card">
+            <span class="ls-badge-pill">{{ rec.get_reason_display }}</span>
+            <h3 style="font-size:1.05rem;" class="ls-mt-16">{{ rec.course.title }}</h3>
+            <p style="font-size:.88rem;">{{ rec.explanation }}</p>
+            <div class="ls-flex ls-gap-8 ls-mt-16">
+              <a href="{% url 'courses:detail' rec.course.slug %}?via=recommendation" class="ls-btn ls-btn-primary ls-btn-sm">View course</a>
+              <a href="{% url 'recommendations:dismiss' rec.id %}" class="ls-btn ls-btn-ghost ls-btn-sm">Dismiss</a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="ls-empty"><div class="glyph">✦</div><p>Take a skill assessment or update your profile interests to get recommendations.</p></div>
+    {% endif %}
+
+    <a href="{% url 'recommendations:learning_path' %}" class="ls-btn ls-btn-ghost ls-mt-40">View my learning path</a>
+  </div>
+</section>
+{% endblock %}

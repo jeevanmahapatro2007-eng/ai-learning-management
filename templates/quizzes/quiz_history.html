@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Quiz history — Lodestar{% endblock %}
+{% block content %}
+<section class="ls-section-tight">
+  <div class="ls-container">
+    <h1 class="ls-mb-24">Quiz history</h1>
+    {% if results %}
+      <table class="ls-table">
+        <thead><tr><th>Quiz</th><th>Score</th><th>Result</th><th>Attempt</th><th>Date</th></tr></thead>
+        <tbody>
+          {% for r in results %}
+            <tr>
+              <td>{{ r.quiz.title }}</td>
+              <td class="ls-mono">{{ r.percent|floatformat:0 }}%</td>
+              <td>{% if r.passed %}<span class="ls-badge-pill teal">Passed</span>{% else %}<span class="ls-badge-pill coral">Failed</span>{% endif %}</td>
+              <td>#{{ r.attempt_number }}</td>
+              <td class="ls-text-faint">{{ r.taken_at|date:"M d, Y" }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <div class="ls-empty"><div class="glyph">✦</div><p>You haven't taken any quizzes yet.</p></div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

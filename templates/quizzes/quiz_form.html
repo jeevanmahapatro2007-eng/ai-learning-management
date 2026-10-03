@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}New quiz — Lodestar{% endblock %}
+{% block content %}
+<section class="ls-section-tight">
+  <div class="ls-container" style="max-width: 640px;">
+    <h1 class="ls-mb-24">Create a quiz</h1>
+    <div class="ls-panel">
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {% include 'partials/form_errors.html' %}
+        <div class="ls-field"><label>Title</label>{{ form.title }}</div>
+        <div class="ls-field"><label>Type</label>{{ form.quiz_type }}</div>
+        <div class="ls-field"><label>Description</label>{{ form.description }}</div>
+        <div class="ls-grid ls-grid-2">
+          <div class="ls-field"><label>Course (optional)</label>{{ form.course }}</div>
+          <div class="ls-field"><label>Lesson (optional)</label>{{ form.lesson }}</div>
+        </div>
+        <div class="ls-field"><label>Skills tested</label>{{ form.skills }}</div>
+        <div class="ls-field"><label>Pass mark (%)</label>{{ form.pass_mark_percent }}</div>
+        <button type="submit" class="ls-btn ls-btn-primary ls-btn-block">Create quiz</button>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

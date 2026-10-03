@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Delete course — Lodestar{% endblock %}
+{% block content %}
+<section class="ls-section-tight">
+  <div class="ls-container" style="max-width: 480px;">
+    <div class="ls-panel ls-text-center">
+      <h2>Delete "{{ course.title }}"?</h2>
+      <p>This will permanently remove the course, its lessons and materials.</p>
+      <form method="post">
+        {% csrf_token %}
+        <div class="ls-flex ls-gap-12" style="justify-content:center;">
+          <a href="{% url 'courses:instructor_courses' %}" class="ls-btn ls-btn-ghost">Cancel</a>
+          <button type="submit" class="ls-btn ls-btn-danger">Delete permanently</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

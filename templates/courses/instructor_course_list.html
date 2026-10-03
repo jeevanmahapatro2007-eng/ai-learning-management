@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title %}My courses — Lodestar{% endblock %}
+{% block content %}
+<section class="ls-section-tight">
+  <div class="ls-container">
+    <div class="ls-flex-between ls-mb-24">
+      <h1>My courses</h1>
+      <a href="{% url 'courses:create' %}" class="ls-btn ls-btn-primary ls-btn-sm">+ New course</a>
+    </div>
+
+    {% if courses %}
+      <table class="ls-table">
+        <thead><tr><th>Title</th><th>Status</th><th>Enrolled</th><th>Difficulty</th><th></th></tr></thead>
+        <tbody>
+          {% for course in courses %}
+            <tr>
+              <td>{{ course.title }}</td>
+              <td><span class="ls-badge-pill {% if course.status == 'published' %}teal{% else %}muted{% endif %}">{{ course.get_status_display }}</span></td>
+              <td>{{ course.enrolled_count }}</td>
+              <td>{{ course.get_difficulty_display }}</td>
+              <td class="ls-flex ls-gap-8">
+                <a href="{% url 'courses:instructor_lessons' course.slug %}" class="ls-btn ls-btn-ghost ls-btn-sm">Lessons</a>
+                <a href="{% url 'courses:edit' course.slug %}" class="ls-btn ls-btn-ghost ls-btn-sm">Edit</a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <div class="ls-empty"><div class="glyph">✦</div><p>You haven't created any courses yet.</p></div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

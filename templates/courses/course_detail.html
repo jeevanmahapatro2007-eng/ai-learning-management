@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block title %}{{ course.title }} — Lodestar{% endblock %}
+{% block content %}
+<section class="ls-section-tight">
+  <div class="ls-container">
+    <div class="ls-hero-grid" style="align-items:start;">
+      <div>
+        <div class="ls-flex ls-gap-8 ls-mb-16">
+          <span class="ls-badge-pill">{{ course.get_difficulty_display }}</span>
+          {% if course.category %}<span class="ls-badge-pill muted">{{ course.category.name }}</span>{% endif %}
+        </div>
+        <h1>{{ course.title }}</h1>
+        <p style="font-size:1.02rem;">{{ course.description }}</p>
+
+        {% if course.objectives_list %}
+          <h3 class="ls-mt-24">What you'll learn</h3>
+          <ul class="ls-text-dim">
+            {% for obj in course.objectives_list %}<li>{{ obj }}</li>{% endfor %}
+          </ul>
+        {% endif %}
+
+        <h3 class="ls-mt-24">Curriculum</h3>
+        <div class="ls-flex" style="flex-direction:column; gap:10px;">
+          {% for lesson in lessons %}
+            <div class="ls-card" style="padding:14px 18px;">
+              <div class="ls-flex-between">
+                <span>{{ forloop.counter }}. {{ lesson.title }}</span>
+                <span class="ls-text-faint ls-mono" style="font-size:.78rem;">{{ lesson.get_lesson_type_display }} · {{ lesson.estimated_minutes }}m</span>
+              </div>
+            </div>
+          {% empty %}
+            <p class="ls-text-faint">Lessons coming soon.</p>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div>
+        <div class="ls-panel">
+          <div class="ls-course-thumb">
+            {% if course.thumbnail %}<img src="{{ course.thumbnail.url }}" alt="">{% else %}✦{% endif %}
+          </div>
+          <div class="ls-flex-between ls-mb-16">
+            <span class="ls-text-faint" style="font-size:.85rem;">Duration</span>
+            <span class="ls-mono">{{ course.duration_hours }}h</span>
+          </div>
+          <div class="ls-flex-between ls-mb-16">
+            <span class="ls-text-faint" style="font-size:.85rem;">Lessons</span>
+            <span class="ls-mono">{{ course.lesson_count }}</span>
+          </div>
+          <div class="ls-flex-between ls-mb-24">
+            <span class="ls-text-faint" style="font-size:.85rem;">Instructor</span>
+            <span>{{ course.instructor.get_full_name|default:course.instructor.username }}</span>
+          </div>
+
+          {% if user.is_authenticated %}
+            {% if enrollment %}
+              <a href="{% url 'courses:learn' course.slug %}" class="ls-btn ls-btn-primary ls-btn-block">Continue learning ({{ enrollment.progress_percent }}%)</a>
+            {% elif user.is_student %}
+              <a href="{% url 'courses:enroll' course.slug %}{% if via %}?via={{ via|urlencode }}{% endif %}" class="ls-btn ls-btn-primary ls-btn-block">Enroll now</a>
+            {% else %}
+              <p class="ls-text-faint" style="font-size:.85rem;">Only student accounts can enroll.</p>
+            {% endif %}
+          {% else %}
+            <a href="{% url 'users:login' %}?next={% url 'courses:enroll' course.slug %}" class="ls-btn ls-btn-primary ls-btn-block">Log in to enroll</a>
+          {% endif %}
+
+          {% if course.skills_covered.all %}
+            <hr class="ls-divider">
+            <span class="ls-text-faint" style="font-size:.8rem;">Skills covered</span>
+            <div class="ls-flex ls-gap-8 ls-mt-8" style="flex-wrap:wrap;">
+              {% for skill in course.skills_covered.all %}<span class="ls-badge-pill teal">{{ skill.name }}</span>{% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

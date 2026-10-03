@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Courses — Lodestar{% endblock %}
+{% block content %}
+<section class="ls-section-tight">
+  <div class="ls-container">
+    <span class="ls-eyebrow">Catalog</span>
+    <h1 class="ls-mt-16 ls-mb-24">Browse courses</h1>
+
+    <form method="get" class="ls-panel ls-mb-24">
+      <div class="ls-grid ls-grid-4">
+        <div class="ls-field" style="margin-bottom:0;">{{ form.q }}</div>
+        <div class="ls-field" style="margin-bottom:0;">{{ form.category }}</div>
+        <div class="ls-field" style="margin-bottom:0;">{{ form.difficulty }}</div>
+        <div class="ls-field" style="margin-bottom:0;">{{ form.duration }}</div>
+      </div>
+      <button type="submit" class="ls-btn ls-btn-primary ls-btn-sm ls-mt-16">Apply filters</button>
+      <a href="{% url 'courses:list' %}" class="ls-btn ls-btn-ghost ls-btn-sm ls-mt-16">Clear</a>
+    </form>
+
+    {% if page_obj %}
+      <div class="ls-grid ls-grid-3">
+        {% for course in page_obj %}
+          {% include 'partials/course_card.html' %}
+        {% endfor %}
+      </div>
+
+      {% if page_obj.has_other_pages %}
+        <div class="ls-flex ls-gap-8 ls-mt-40" style="justify-content:center;">
+          {% if page_obj.has_previous %}
+            <a href="?{% if querystring %}{{ querystring }}&{% endif %}page={{ page_obj.previous_page_number }}" class="ls-btn ls-btn-ghost ls-btn-sm">← Prev</a>
+          {% endif %}
+          <span class="ls-mono ls-text-dim" style="align-self:center;">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+          {% if page_obj.has_next %}
+            <a href="?{% if querystring %}{{ querystring }}&{% endif %}page={{ page_obj.next_page_number }}" class="ls-btn ls-btn-ghost ls-btn-sm">Next →</a>
+          {% endif %}
+        </div>
+      {% endif %}
+    {% else %}
+      <div class="ls-empty">
+        <div class="glyph">✦</div>
+        <p>No courses match your filters yet.</p>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

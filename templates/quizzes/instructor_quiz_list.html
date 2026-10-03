@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}My quizzes — Lodestar{% endblock %}
+{% block content %}
+<section class="ls-section-tight">
+  <div class="ls-container">
+    <div class="ls-flex-between ls-mb-24">
+      <h1>My quizzes</h1>
+      <a href="{% url 'quizzes:create' %}" class="ls-btn ls-btn-primary ls-btn-sm">+ New quiz</a>
+    </div>
+    {% if quizzes %}
+      <table class="ls-table">
+        <thead><tr><th>Title</th><th>Type</th><th>Questions</th><th>Course</th><th></th></tr></thead>
+        <tbody>
+          {% for quiz in quizzes %}
+            <tr>
+              <td>{{ quiz.title }}</td>
+              <td>{{ quiz.get_quiz_type_display }}</td>
+              <td>{{ quiz.qcount }}</td>
+              <td>{{ quiz.course|default:"—" }}</td>
+              <td><a href="{% url 'quizzes:instructor_questions' quiz.id %}" class="ls-btn ls-btn-ghost ls-btn-sm">Manage questions</a></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <div class="ls-empty"><div class="glyph">✦</div><p>You haven't created any quizzes yet.</p></div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

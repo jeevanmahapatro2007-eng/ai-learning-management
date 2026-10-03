@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}Instructor dashboard — Lodestar{% endblock %}
+{% block content %}
+<section class="ls-section-tight">
+  <div class="ls-container">
+    <span class="ls-eyebrow">Instructor dashboard</span>
+    <h1 class="ls-mt-16 ls-mb-24">Welcome back, {{ user.first_name|default:user.username }}</h1>
+
+    {% if not user.is_instructor_approved %}
+      <div class="ls-alert warning">Your instructor account is pending admin approval. Your courses stay in draft until then.</div>
+    {% endif %}
+
+    <div class="ls-grid ls-grid-4 ls-mb-40">
+      <div class="ls-stat"><div class="value">{{ overview.total_courses }}</div><div class="label">Total courses</div></div>
+      <div class="ls-stat"><div class="value">{{ overview.total_students }}</div><div class="label">Total students</div></div>
+      <div class="ls-stat"><div class="value">{{ overview.completion_rate }}%</div><div class="label">Completion rate</div></div>
+      <div class="ls-stat"><div class="value">{{ overview.average_quiz_score }}%</div><div class="label">Avg quiz score</div></div>
+    </div>
+
+    <div class="ls-flex-between ls-mb-16">
+      <h2 style="font-size:1.2rem;">Your courses</h2>
+      <a href="{% url 'courses:create' %}" class="ls-btn ls-btn-primary ls-btn-sm">+ New course</a>
+    </div>
+
+    {% if overview.courses %}
+      <table class="ls-table">
+        <thead><tr><th>Title</th><th>Status</th><th>Enrolled</th><th>Completed</th><th></th></tr></thead>
+        <tbody>
+          {% for course in overview.courses %}
+            <tr>
+              <td>{{ course.title }}</td>
+              <td><span class="ls-badge-pill {% if course.status == 'published' %}teal{% else %}muted{% endif %}">{{ course.get_status_display }}</span></td>
+              <td>{{ course.enrolled_count }}</td>
+              <td>{{ course.completed_count }}</td>
+              <td><a href="{% url 'courses:instructor_lessons' course.slug %}" class="ls-btn ls-btn-ghost ls-btn-sm">Manage</a></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <div class="ls-empty"><div class="glyph">✦</div><p>You haven't created any courses yet.</p></div>
+    {% endif %}
+
+    <a href="{% url 'quizzes:instructor_quizzes' %}" class="ls-btn ls-btn-ghost ls-mt-24">Manage my quizzes</a>
+  </div>
+</section>
+{% endblock %}

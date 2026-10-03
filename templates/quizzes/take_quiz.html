@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}{{ quiz.title }} — Lodestar{% endblock %}
+{% block content %}
+<section class="ls-section-tight">
+  <div class="ls-container" style="max-width: 720px;">
+    <span class="ls-eyebrow">{{ quiz.get_quiz_type_display }}</span>
+    <h1 class="ls-mt-16 ls-mb-8">{{ quiz.title }}</h1>
+    <p class="ls-mb-24">{{ quiz.description }}</p>
+
+    <form method="post">
+      {% csrf_token %}
+      {% for question in questions %}
+        <div class="ls-card ls-mb-16">
+          <h3 style="font-size:1rem;">{{ forloop.counter }}. {{ question.text }}</h3>
+          <div class="ls-flex" style="flex-direction:column; gap:8px; margin-top:16px;">
+            {% for answer in question.answers.all %}
+              <label class="ls-radio-option" style="display:flex; align-items:center; gap:10px; min-width:0;">
+                <input type="radio" name="question_{{ question.id }}" value="{{ answer.id }}" required>
+                {{ answer.text }}
+              </label>
+            {% endfor %}
+          </div>
+        </div>
+      {% endfor %}
+      <button type="submit" class="ls-btn ls-btn-primary ls-btn-block">Submit quiz</button>
+    </form>
+  </div>
+</section>
+{% endblock %}

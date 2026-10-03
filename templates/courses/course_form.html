@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}{% if mode == 'edit' %}Edit{% else %}New{% endif %} course — Lodestar{% endblock %}
+{% block content %}
+<section class="ls-section-tight">
+  <div class="ls-container" style="max-width: 680px;">
+    <h1 class="ls-mb-24">{% if mode == 'edit' %}Edit course{% else %}Create a new course{% endif %}</h1>
+    <div class="ls-panel">
+      <form method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+        {% include 'partials/form_errors.html' %}
+        <div class="ls-field"><label>Title</label>{{ form.title }}</div>
+        <div class="ls-field"><label>Category</label>{{ form.category }}</div>
+        <div class="ls-field"><label>Short description</label>{{ form.short_description }}</div>
+        <div class="ls-field"><label>Full description</label>{{ form.description }}</div>
+        <div class="ls-grid ls-grid-2">
+          <div class="ls-field"><label>Difficulty</label>{{ form.difficulty }}</div>
+          <div class="ls-field"><label>Duration (hours)</label>{{ form.duration_hours }}</div>
+        </div>
+        <div class="ls-field"><label>Thumbnail</label>{{ form.thumbnail }}</div>
+        <div class="ls-field"><label>Learning objectives</label>{{ form.learning_objectives }}<div class="ls-help">One per line</div></div>
+        <div class="ls-field"><label>Skills covered</label>{{ form.skills_covered }}</div>
+        <div class="ls-field"><label>Status</label>{{ form.status }}</div>
+        <button type="submit" class="ls-btn ls-btn-primary ls-btn-block">Save course</button>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

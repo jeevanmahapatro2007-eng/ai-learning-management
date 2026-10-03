@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}Learning path — Lodestar{% endblock %}
+{% block content %}
+<section class="ls-section-tight">
+  <div class="ls-container" style="max-width: 720px;">
+    <span class="ls-eyebrow">Plotted for you</span>
+    <h1 class="ls-mt-16 ls-mb-24">Your learning path</h1>
+
+    {% for path in paths %}
+      <div class="ls-panel ls-mb-24">
+        <h2 style="font-size:1.1rem;">{{ path.domain }}</h2>
+        <div class="ls-trail ls-mt-24">
+          {% for step in path.steps.all %}
+            <div class="ls-trail-step {{ step.status }}">
+              <div class="ls-trail-node">{% if step.status == 'completed' %}✓{% else %}{{ forloop.counter }}{% endif %}</div>
+              <div style="padding-top:3px;">
+                <div class="ls-flex-between">
+                  <strong style="font-size:.92rem;">{{ step.topic }}</strong>
+                  <span class="ls-badge-pill {% if step.status == 'completed' %}teal{% elif step.status == 'available' %}{% else %}muted{% endif %}">{{ step.get_status_display }}</span>
+                </div>
+                {% if step.course and step.status == 'available' %}
+                  <a href="{% url 'courses:detail' step.course.slug %}" class="ls-text-gold" style="font-size:.85rem;">Start this course →</a>
+                {% endif %}
+              </div>
+            </div>
+          {% empty %}
+            <p class="ls-text-faint">No courses found for this domain yet.</p>
+          {% endfor %}
+        </div>
+      </div>
+    {% empty %}
+      <div class="ls-empty"><div class="glyph">✦</div><p>Add preferred domains to your profile to generate a learning path.</p></div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
